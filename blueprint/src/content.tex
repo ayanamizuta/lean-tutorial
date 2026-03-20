@@ -1,0 +1,103 @@
+\chapter{Wilson の定理}
+\label{chap:wilson}
+
+\section{概要}
+
+本 blueprint では Wilson の定理の形式的証明をトップダウン方式で構築します。
+
+\begin{theorem}[Wilson の定理]
+\label{thm:wilsons_theorem}
+\lean{WilsonProof.wilsons_theorem}
+\uses{thm:wilsons_lemma, thm:prime_of_factorial}
+素数 $p \geq 2$ に対して、次が成り立つ:
+\[
+  p \text{ が素数} \iff (p-1)! \equiv -1 \pmod{p}
+\]
+\end{theorem}
+
+\begin{proof}
+\uses{thm:wilsons_lemma, thm:prime_of_factorial}
+前件と後件の双方向から示す。
+\end{proof}
+
+\section{前件: 素数ならば Wilson 合同式}
+
+\begin{theorem}[Wilson の補題]
+\label{thm:wilsons_lemma}
+\lean{WilsonProof.wilsons_lemma}
+\uses{lem:factorial_cast_eq_prod, lem:prod_nonzero_eq_neg_one}
+素数 $p$ に対して、$(p-1)! \equiv -1 \pmod{p}$。
+\end{theorem}
+
+\begin{proof}
+\uses{lem:factorial_cast_eq_prod, lem:prod_nonzero_eq_neg_one}
+補題 \ref{lem:factorial_cast_eq_prod} と \ref{lem:prod_nonzero_eq_neg_one} を組み合わせると、
+$(p-1)!$ を $\Zmod{p}$ に cast したものは $-1$ に等しい。
+\end{proof}
+
+\begin{lemma}
+\label{lem:factorial_cast_eq_prod}
+\lean{WilsonProof.factorial_cast_eq_prod}
+\uses{}
+素数 $p$ に対して、$(p-1)!$ の $\Zmod{p}$ への cast は
+$\Zmod{p}$ の全非零元の積に等しい。
+すなわち、
+\[
+  (p-1)! \equiv \prod_{x \in (\Z/p\Z)^*} x \pmod{p}
+\]
+\end{lemma}
+
+\begin{proof}
+$\{1, 2, \ldots, p-1\}$ は $(\Z/p\Z)^* = (\Z/p\Z) \setminus \{0\}$ の完全代表系をなす。
+積の定義から直接従う。
+\end{proof}
+
+\begin{lemma}
+\label{lem:prod_nonzero_eq_neg_one}
+\lean{WilsonProof.prod_nonzero_eq_neg_one}
+\uses{lem:sq_eq_one_iff_pm_one}
+素数 $p$ に対して、$\Zmod{p}$ の全非零元の積は $-1$ に等しい。
+\[
+  \prod_{x \in (\Z/p\Z)^*} x = -1
+\]
+\end{lemma}
+
+\begin{proof}
+\uses{lem:sq_eq_one_iff_pm_one}
+$\Zmod{p}$ の各非零元 $x$ はその逆元 $x^{-1}$ とペアを組む。
+$x \neq x^{-1}$（すなわち $x^2 \neq 1$）の場合、$x$ と $x^{-1}$ の積は $1$ なので積への寄与は $1$。
+$x = x^{-1}$（すなわち $x^2 = 1$）の場合、補題 \ref{lem:sq_eq_one_iff_pm_one} より
+$x = 1$ または $x = -1$。
+したがって全体の積は $1 \times (-1) = -1$。
+\end{proof}
+
+\begin{lemma}
+\label{lem:sq_eq_one_iff_pm_one}
+\lean{WilsonProof.sq_eq_one_iff_pm_one}
+\uses{}
+素数 $p$ と $\Zmod{p}$ の元 $x$ に対して、$x^2 = 1$ であることと
+$x = 1$ または $x = -1$ であることは同値。
+\end{lemma}
+
+\begin{proof}
+$p$ が素数のとき $\Zmod{p}$ は体。
+$x^2 - 1 = (x-1)(x+1) = 0$ より $x = 1$ または $x = -1$（体では零因子が存在しない）。
+\end{proof}
+
+\section{後件: Wilson 合同式ならば素数}
+
+\begin{theorem}
+\label{thm:prime_of_factorial}
+\lean{WilsonProof.prime_of_factorial}
+\uses{}
+$p \geq 2$ かつ $(p-1)! \equiv -1 \pmod{p}$ ならば $p$ は素数である。
+\end{theorem}
+
+\begin{proof}
+対偶を示す。$p$ が合成数であるとする。
+ある $1 < d < p$ が存在して $d \mid p$。
+このとき $d \leq p - 1$ なので $d \mid (p-1)!$。
+よって $(p-1)! \equiv 0 \pmod{d}$。
+もし $(p-1)! \equiv -1 \pmod{p}$ ならば $-1 \equiv 0 \pmod{d}$、
+すなわち $d \mid 1$ となり $d = 1$ で矛盾。
+\end{proof}
