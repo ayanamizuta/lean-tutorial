@@ -1,0 +1,23 @@
+% This file makes a printable version of the blueprint
+% It should include all the \usepackage needed for the pdf version.
+
+\documentclass[a4paper]{report}
+
+\usepackage{geometry}
+\usepackage{expl3}
+\usepackage{amssymb, amsthm, mathtools}
+\usepackage{thmtools}
+\usepackage[unicode,colorlinks=true,linkcolor=blue,urlcolor=magenta,citecolor=blue]{hyperref}
+\usepackage[warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}
+
+\input{macros/common}
+\input{macros/print}
+
+\title{Wilson の定理 --- Blueprint}
+\author{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\input{content}
+\end{document}

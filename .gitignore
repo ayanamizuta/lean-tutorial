@@ -1,0 +1,14 @@
+# Lake ビルド成果物
+.lake/
+
+# Blueprint ビルド成果物
+blueprint/print/
+blueprint/web/
+
+# Python 仮想環境
+env/
+__pycache__/
+*.pyc
+
+# エディタ設定
+.vscode/settings.json

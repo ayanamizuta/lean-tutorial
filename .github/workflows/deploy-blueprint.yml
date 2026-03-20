@@ -1,0 +1,76 @@
+name: CD - Blueprint ページ生成・デプロイ
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+# GitHub Pages へのデプロイに必要なパーミッション
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    name: Blueprint のビルドと GitHub Pages へのデプロイ
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Lean のセットアップと Mathlib キャッシュの取得
+        uses: leanprover/lean-action@v1
+        with:
+          use-mathlib-cache: true
+
+      - name: lake build によるビルド
+        run: lake build
+
+      - name: Blueprint のビルド（PDF と Web）
+        uses: xu-cheng/texlive-action@v2
+        with:
+          docker_image: ghcr.io/xu-cheng/texlive-full:20231201
+          run: |
+            apk update
+            apk add --update make py3-pip git pkgconfig graphviz graphviz-dev gcc musl-dev
+            git config --global --add safe.directory $GITHUB_WORKSPACE
+            git config --global --add safe.directory $(pwd)
+            python3 -m venv env
+            source env/bin/activate
+            pip install --upgrade pip requests wheel
+            LDFLAGS="-L/usr/lib/graphviz/" pip install pygraphviz
+            pip install leanblueprint
+            leanblueprint pdf
+            mkdir -p docs
+            cp blueprint/print/print.pdf docs/blueprint.pdf || true
+            leanblueprint web
+            cp -r blueprint/web docs/blueprint
+
+      - name: Blueprint 宣言の確認（lean_decls）
+        run: leanblueprint checkdecls || true
+
+      - name: docs ディレクトリのオーナーを修正
+        run: sudo chown -R runner docs || true
+
+      - name: GitHub Pages の設定
+        uses: actions/configure-pages@v5
+
+      - name: Pages アーティファクトのアップロード
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/
+
+      - name: GitHub Pages へのデプロイ
+        id: deployment
+        uses: actions/deploy-pages@v4

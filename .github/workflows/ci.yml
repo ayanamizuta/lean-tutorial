@@ -1,0 +1,46 @@
+name: CI - Lean 証明チェック
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.lean'
+      - 'lean-toolchain'
+      - 'lakefile.toml'
+      - 'lake-manifest.json'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**/*.lean'
+      - 'lean-toolchain'
+      - 'lakefile.toml'
+      - 'lake-manifest.json'
+  workflow_dispatch:
+
+# 同一 ref への重複実行をキャンセル
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Lean プロジェクトのビルドと証明チェック
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Lean のセットアップと Mathlib キャッシュの取得
+        uses: leanprover/lean-action@v1
+        with:
+          use-mathlib-cache: true
+
+      - name: lake build によるビルドと証明チェック
+        run: lake build
