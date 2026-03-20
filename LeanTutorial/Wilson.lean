@@ -37,13 +37,17 @@ lemma sq_eq_one_iff_pm_one {p : ℕ} (hp : Nat.Prime p) (x : ZMod p) :
 
 /-- ZMod p（p: 素数）の全非零元の積は `-1` に等しい -/
 lemma prod_nonzero_eq_neg_one {p : ℕ} (hp : Nat.Prime p) :
+    haveI : NeZero p := ⟨hp.ne_zero⟩
     ∏ x ∈ (Finset.univ : Finset (ZMod p)).erase 0, x = -1 := by
+  haveI : NeZero p := ⟨hp.ne_zero⟩
   sorry
 
 /-- `(p - 1)!` の ZMod p への cast は、ZMod p の全非零元の積に等しい -/
 lemma factorial_cast_eq_prod {p : ℕ} (hp : Nat.Prime p) :
+    haveI : NeZero p := ⟨hp.ne_zero⟩
     ((p - 1).factorial : ZMod p) =
     ∏ x ∈ (Finset.univ : Finset (ZMod p)).erase 0, x := by
+  haveI : NeZero p := ⟨hp.ne_zero⟩
   sorry
 
 /-! ## 主定理 -/
@@ -51,6 +55,7 @@ lemma factorial_cast_eq_prod {p : ℕ} (hp : Nat.Prime p) :
 /-- Wilson の定理（前件）: `p` が素数ならば `(p - 1)! ≡ -1 (mod p)` -/
 theorem wilsons_lemma {p : ℕ} (hp : Nat.Prime p) :
     ((p - 1).factorial : ZMod p) = -1 := by
+  haveI : NeZero p := ⟨hp.ne_zero⟩
   rw [factorial_cast_eq_prod hp, prod_nonzero_eq_neg_one hp]
 
 /-- Wilson の定理（後件）: `p ≥ 2` かつ `(p - 1)! ≡ -1 (mod p)` ならば `p` は素数 -/
