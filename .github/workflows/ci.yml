@@ -40,7 +40,11 @@ jobs:
       - name: Lean のセットアップと Mathlib キャッシュの取得
         uses: leanprover/lean-action@v1
         with:
+          build: false
           use-mathlib-cache: true
+
+      - name: doc-gen4 依存関係の解決
+        run: lake update doc-gen4
 
       - name: lake build によるビルドと証明チェック
         run: lake build
