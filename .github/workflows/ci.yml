@@ -9,7 +9,6 @@ on:
       - 'lean-toolchain'
       - 'lakefile.toml'
       - 'lake-manifest.json'
-      - '.github/workflows/ci.yml'
   pull_request:
     branches:
       - main
@@ -18,7 +17,6 @@ on:
       - 'lean-toolchain'
       - 'lakefile.toml'
       - 'lake-manifest.json'
-      - '.github/workflows/ci.yml'
   workflow_dispatch:
 
 # 同一 ref への重複実行をキャンセル
@@ -39,17 +37,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: デバッグ - lakefile.toml の内容確認
-        run: cat lakefile.toml
-
-      - name: デバッグ - lake-manifest.json の内容確認
-        run: cat lake-manifest.json
-
       - name: Lean のセットアップと Mathlib キャッシュの取得
         uses: leanprover/lean-action@v1
         with:
           use-mathlib-cache: true
-          use-github-cache: false
 
       - name: lake build によるビルドと証明チェック
         run: lake build
