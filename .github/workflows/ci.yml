@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths:
-      - '**/*.lean'
+      - 'LeanTutorial/**/*.lean'
+      - 'LeanTutorial.lean'
       - 'lean-toolchain'
       - 'lakefile.toml'
       - 'lake-manifest.json'
@@ -13,7 +14,8 @@ on:
     branches:
       - main
     paths:
-      - '**/*.lean'
+      - 'LeanTutorial/**/*.lean'
+      - 'LeanTutorial.lean'
       - 'lean-toolchain'
       - 'lakefile.toml'
       - 'lake-manifest.json'

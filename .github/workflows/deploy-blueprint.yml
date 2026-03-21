@@ -4,6 +4,14 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'LeanTutorial/**/*.lean'
+      - 'LeanTutorial.lean'
+      - 'lean-toolchain'
+      - 'lakefile.toml'
+      - 'lake-manifest.json'
+      - 'blueprint/**'
+      - 'scripts/**'
   workflow_dispatch:
 
 concurrency:
