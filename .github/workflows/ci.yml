@@ -9,6 +9,7 @@ on:
       - 'lean-toolchain'
       - 'lakefile.toml'
       - 'lake-manifest.json'
+      - '.github/workflows/ci.yml'
   pull_request:
     branches:
       - main
@@ -17,6 +18,7 @@ on:
       - 'lean-toolchain'
       - 'lakefile.toml'
       - 'lake-manifest.json'
+      - '.github/workflows/ci.yml'
   workflow_dispatch:
 
 # 同一 ref への重複実行をキャンセル
