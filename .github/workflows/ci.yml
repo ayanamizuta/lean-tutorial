@@ -37,18 +37,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Lean のセットアップ
+      - name: Lean のセットアップと Mathlib キャッシュの取得
         uses: leanprover/lean-action@v1
         with:
-          build: false
-          use-mathlib-cache: false
-          use-github-cache: false
-
-      - name: doc-gen4 依存関係の解決
-        run: lake update doc-gen4
-
-      - name: Mathlib キャッシュの取得
-        run: lake exe cache get
+          use-mathlib-cache: true
 
       - name: lake build によるビルドと証明チェック
         run: lake build
