@@ -37,10 +37,34 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Lean のセットアップと Mathlib キャッシュの取得
-        uses: leanprover/lean-action@v1
-        with:
-          use-mathlib-cache: true
+      - name: Elan のインストール
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Lean ツールチェインのインストール
+        run: |
+          elan toolchain install $(cat lean-toolchain)
+          elan default $(cat lean-toolchain)
+          lean --version
+          lake --version
+
+      - name: ファイル一覧の確認
+        run: |
+          echo "=== lakefile.toml ==="
+          cat lakefile.toml
+          echo ""
+          echo "=== lean-toolchain ==="
+          cat lean-toolchain
+          echo ""
+          echo "=== lake-manifest.json (先頭) ==="
+          head -20 lake-manifest.json
+
+      - name: Lake 依存関係の解決確認
+        run: lake resolve-deps 2>&1 || true
+
+      - name: Mathlib キャッシュの取得
+        run: lake exe cache get || echo "cache get failed with exit code $?"
 
       - name: lake build によるビルドと証明チェック
         run: lake build
